@@ -8,11 +8,8 @@ SQLITE = 'sqlite'
 USERS = 'users'
 MESSAGES = 'messages'
 
-
 engine = create_engine('sqlite:///db.sqlite3', echo=True)
-
 Base = declarative_base()
-
 
 class User(Base):
     __tablename__ = 'users'
@@ -42,6 +39,5 @@ class Messages(Base):
         self.last_message = last_message
     def __repr__(self):
         return "<User('%s','%s,'%s')>" % (self.user_id, self.message_text,self.last_message)
-
 # Создание таблицы
 Base.metadata.create_all(engine)
