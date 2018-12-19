@@ -19,7 +19,7 @@ def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Привет, давай пообщаемся?')
     querry = User(update.message.chat_id,update.message.from_user.username,update.message.date)
     session.add(querry)
-    print(querry)
+
 
     session.commit()
 def textMessage(bot, update):
@@ -27,26 +27,24 @@ def textMessage(bot, update):
     #bot.send_message(chat_id=update.message.chat_id, text=response)
     querry = Messages(update.message.chat_id, update.message.text, last_message=False)
     session.add(querry)
-    print(querry)
 
 def writeCommand(bot,update):
-    session.commit()
+    #session.commit()
     querry = session.query(Messages).filter(Messages.user_id==update.message.chat_id).all()
     for row in querry:
         row.last_message = False
         session.add(row)
     last = querry[-1]
     last.last_message = True
-    print(last)
     session.add(last)
     session.commit()
     bot.send_message(chat_id=update.message.chat_id, text=last.id)
+
 def read_lastCommand(bot,update):
-    querry = session.query(Messages).filter_by(last_message=True).first()
+    querry = session.query(Messages).filter(Messages.user_id==update.message.chat_id).filter_by(last_message=True).first()
     bot.send_message(chat_id=update.message.chat_id,text=querry.message_text)
-    print(querry.message_text)
 def readCommand(bot,update):
-    session.rollback()
+    #session.rollback()
     a = (update.message.text).split(' ')
     querry = session.query(Messages).filter(Messages.id == a[-1]).first()
     if querry == None:
@@ -55,7 +53,7 @@ def readCommand(bot,update):
         bot.send_message(chat_id=update.message.chat_id, text=querry.message_text)
 
 def readallCommand(bot,update):
-    session.rollback()
+    #session.rollback()
     querry = session.query(Messages).filter(Messages.user_id == update.message.chat_id).all()
     list1 = []
     for row in querry:
